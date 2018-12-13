@@ -1,36 +1,26 @@
-import React, { Component } from 'react'
-import { render } from 'react-dom'
-import { BrowserRouter as Router, Route, } from 'react-router-dom'
-import registerServiceWorker from './registerServiceWorker'
-import './index.css'
-import App from 'App'
+// import React from "react"
+import ReactDOM from "react-dom"
+import "./styles.css"
+import { Parser } from 'html-to-react'
 
-class AppRouter extends Component {
-	render() {
-		return (
-			<Router>
-				<div>
-					<Route path='/' component={App} />
-				</div>
-			</Router>
-		)
-	}
-}
-export default AppRouter
+// var HtmlToReactParser = require('html-to-react').Parser
 
-render(
-	<AppRouter />,
-	document.getElementById('root')
-)
+// var htmlInput = '<div><h1>Title</h1><p>A paragraph</p></div>'
+var htmlInput = '<div><h1>Title</h1><p><strong>Senti</strong><span style="font-weight: 300;"> er en open source Internet of Things platform, der </span><strong>gør dig i stand til at sanse og opsamle</strong><span style="font-weight: 300;"> viden om mennesker og tilstande i dit bymæssige eller industrielle miljø.</span></p><span style="font-weight: 300;">Senti.Cloud er den </span><strong>infrastruktur</strong><span style="font-weight: 300;"> du har brug for til at opbygge, implementere og styre din portefølje af </span><strong>IoT-enheder</strong><span style="font-weight: 300;"> i stor skala.</span></div>'
 
-if (module.hot) {
-	module.hot.accept('./index'.default, () => {
-		const NextApp = require('./index').default
-		render(
-			<NextApp />,
-			document.getElementById('root')
-		)
-	})
-}
+// var htmlToReactParser = new HtmlToReactParser()
+var htmlToReactParser = new Parser()
+var reactElement = htmlToReactParser.parse(htmlInput)
 
-registerServiceWorker()
+
+/* function App() {
+	return (
+		<div className="App">
+			<h1>HTML2React</h1>
+		</div>
+	)
+} */
+
+ReactDOM.render(reactElement, document.getElementById('root'))
+
+// ReactDOM.render(<App />, document.getElementById("root"))
