@@ -1,24 +1,30 @@
-import React from "react"
-var ReactDOMServer = require('react-dom/server')
+var React = require('react')
 var HtmlToReact = require('html-to-react')
 var HtmlToReactParser = require('html-to-react').Parser
 
-var htmlInput = '<div><h1>Title</h1><p>Paragraph</p><h1>Another title</h1></div>'
+var htmlToReactParser = new HtmlToReactParser()
+// var htmlInput = '<div><div data-test="foo"><p>Text</p><p>Text</p></div></div>'
+var htmlInput = '<div><a href="/dk/website/senti.htm" title="Senti" data-pageid="138230100010011">Senti.Cloud</a></div>'
 
 var isValidNode = function () {
 	return true
 }
 
-// Order matters. Instructions are processed in the order they're defined
 var processNodeDefinitions = new HtmlToReact.ProcessNodeDefinitions(React)
+
+// Order matters. Instructions are processed in
+// the order they're defined
 var processingInstructions = [
 	{
-		// Custom <h1> processing
+		// This is REQUIRED, it tells the parser
+		// that we want to insert our React
+		// component as a child
+		replaceChildren: true,
 		shouldProcessNode: function (node) {
-			return node.parent && node.parent.name && node.parent.name === 'h1'
+			return node.attribs && node.attribs['data-pageid']
 		},
-		processNode: function (node, children) {
-			return node.data.toUpperCase()
+		processNode: function (node, children, index) {
+			return React.createElement('LinkTo', { key: index, }, node.attribs['data-pageid'])
 		}
 	},
 	{
@@ -26,10 +32,11 @@ var processingInstructions = [
 		shouldProcessNode: function (node) {
 			return true
 		},
-		processNode: processNodeDefinitions.processDefaultNode
-	}
+		processNode: processNodeDefinitions.processDefaultNode,
+	},
 ]
-var htmlToReactParser = new HtmlToReactParser()
-var reactComponent = htmlToReactParser.parseWithInstructions(htmlInput, isValidNode,
-	processingInstructions)
-var reactHtml = ReactDOMServer.renderToStaticMarkup(reactComponent)
+
+var reactComponent = htmlToReactParser.parseWithInstructions(
+	htmlInput, isValidNode, processingInstructions)
+
+console.log(reactComponent)
