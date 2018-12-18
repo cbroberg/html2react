@@ -12,14 +12,12 @@ const api = create({
 	}
 })
 
-const NUMRETRY = 5
-// const apiEndpoint = '/rest/cms/content/da/138230100010022'
-const apiEndpoint = '/rest/cms/content/da/'
+const apiEndpoint = '/rest/cms/content/da/138230100010022'
 
-const apiCall = async (id, n) => {
+const apiCall = async (n) => {
 	let response
 	try {
-		response = await api.get(apiEndpoint + id)
+		response = await api.get(apiEndpoint)
 	} catch (error) {
 		if (n === 1) {
 			console.error(error)
@@ -36,12 +34,11 @@ const apiCall = async (id, n) => {
 }
 
 class GetContent extends Component {
-	state = { text: ' ' }
+	state = { text: 'Loading' }
 
 	componentDidMount = async () => {
-		const { id } = this.props
 		let response
-		response = await apiCall(id, NUMRETRY)
+		response = await apiCall(1)
 		
 		this.setState({ text: response.content })
 		console.log(response)
@@ -53,22 +50,29 @@ class GetContent extends Component {
 		var ReactElement = () => htmlToReactParser.parse(text)
 
 		return (
-			<>
+			<div>
 				<ReactElement source={text} />
-			</>
+			</div>
 		)
 	}
 }
+
+var htmlInput = '<div><h1>Title</h1><p><strong>Senti</strong><span style="font-weight: 300;"> er en open source Internet of Things platform, der </span><strong>gør dig i stand til at sanse og opsamle</strong><span style="font-weight: 300;"> viden om mennesker og tilstande i dit bymæssige eller industrielle miljø.</span></p><span style="font-weight: 300;">Senti.Cloud er den </span><strong>infrastruktur</strong><span style="font-weight: 300;"> du har brug for til at opbygge, implementere og styre din portefølje af </span><strong>IoT-enheder</strong><span style="font-weight: 300;"> i stor skala.</span></div>'
+
+var htmlToReactParser = new Parser()
+var ReactElement = () => htmlToReactParser.parse(htmlInput)
 
 function App() {
 	return (
 		<div className="App">
 			<h1>HTML2React</h1>
-			<GetContent id={138230100010022}/>
-			<GetContent id={136550100000088}/>
+			<ReactElement />
+			<GetContent />
 		</div>
 	)
 }
+
+// ReactDOM.render(ReactElement, document.getElementById('root'))
 
 ReactDOM.render(<App />, document.getElementById("root"))
 
