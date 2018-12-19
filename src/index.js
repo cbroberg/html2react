@@ -1,8 +1,8 @@
 import React, { Component } from "react"
 import ReactDOM from "react-dom"
-import "./styles.css"
 import { Parser } from 'html-to-react'
 import { create } from 'apisauce'
+import "./styles.css"
 
 const api = create({
 	baseURL: 'https://betabackend.senti.cloud',
